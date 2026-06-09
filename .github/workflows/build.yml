@@ -14,7 +14,7 @@ jobs:
     env:
       NDK_VERSION: "28.0.13004108"
       GO_VERSION: "1.25.10"
-      SINGBOX_REF: "main" # ядро sing-box для libbox; при API-несовпадении запиннить тег
+      SINGBOX_REF: "v1.14.0-alpha.29" # ядро sing-box, точно совпадает с версией SFA
     steps:
       - name: Checkout
         uses: actions/checkout@v4
