@@ -13,3 +13,7 @@ local.properties
 /service-account-credentials.json
 /CLAUDE.md
 /.claude/
+
+# signing (never commit)
+app/release.keystore
+local.properties
