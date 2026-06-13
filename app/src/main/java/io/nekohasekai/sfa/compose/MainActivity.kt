@@ -107,6 +107,7 @@ import io.nekohasekai.sfa.compose.navigation.SFANavHost
 import io.nekohasekai.sfa.compose.navigation.Screen
 import io.nekohasekai.sfa.compose.navigation.bottomNavigationScreens
 import io.nekohasekai.sfa.compose.screen.configuration.ProfileImportHandler
+import io.nekohasekai.sfa.compose.screen.home.CottonHomeScreen
 import io.nekohasekai.sfa.compose.screen.connections.ConnectionDetailsScreen
 import io.nekohasekai.sfa.compose.screen.connections.ConnectionsPage
 import io.nekohasekai.sfa.compose.screen.connections.ConnectionsViewModel
@@ -152,6 +153,10 @@ class MainActivity :
     private var newProfileArgs by mutableStateOf(NewProfileArgs())
     private var parseImportLocalProfileJob: Job? = null
     private var pendingIntentErrorMessage by mutableStateOf<String?>(null)
+
+    // CottonVPN: минимальный экран по умолчанию; шестерёнка открывает полный (advanced) UI.
+    private var showAdvanced by mutableStateOf(false)
+    private var pendingKeyUrl by mutableStateOf<String?>(null)
 
     private val notificationPermissionLauncher =
         registerForActivityResult(
@@ -216,7 +221,22 @@ class MainActivity :
 
         setContent {
             SFATheme {
-                SFAApp()
+                if (showAdvanced) {
+                    // Полный sing-box UI (логи/настройки/профили) — открывается по шестерёнке.
+                    // Этот BackHandler сработает только когда внутренние обработчики SFAApp выключены
+                    // (т.е. на корневом экране) — вернёт на минимальный домашний экран.
+                    BackHandler(enabled = true) { showAdvanced = false }
+                    SFAApp()
+                } else {
+                    CottonHomeScreen(
+                        serviceStatus = currentServiceStatus,
+                        onConnect = { startService() },
+                        onDisconnect = { BoxService.stop() },
+                        onOpenSettings = { showAdvanced = true },
+                        pendingKeyUrl = pendingKeyUrl,
+                        onPendingKeyConsumed = { pendingKeyUrl = null },
+                    )
+                }
             }
         }
     }
@@ -239,13 +259,9 @@ class MainActivity :
             return
         }
         if (uri.scheme == "sing-box" && uri.host == "import-remote-profile") {
-            try {
-                val profile = Libbox.parseRemoteProfileImportLink(uri.toString())
-                pendingImportProfile = Triple(profile.name, profile.host, profile.url)
-                showImportProfileDialog = true
-            } catch (e: Exception) {
-                pendingIntentErrorMessage = e.message ?: "Failed to parse profile link"
-            }
+            // Бот-ссылка /app/{token} -> deeplink: передаём на минимальный экран,
+            // который сам распарсит и сохранит ключ (HomeViewModel.normalizeUrl).
+            pendingKeyUrl = uri.toString()
             return
         }
 

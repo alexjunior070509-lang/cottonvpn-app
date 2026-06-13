@@ -1,7 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <!-- App -->
-    <string name="app_name" translatable="false">sing-box</string>
+    <string name="app_name" translatable="false">CottonVPN</string>
+    <string name="cotton_connect">Подключиться</string>
+    <string name="cotton_disconnect">Отключиться</string>
+    <string name="cotton_key_hint">Вставь ключ из бота</string>
+    <string name="cotton_save_key">Сохранить ключ</string>
+    <string name="cotton_key_saved">Ключ сохранён</string>
+    <string name="cotton_change_key">Изменить</string>
     <string name="app_version_title">Версия приложения</string>
     <string name="language">Язык</string>
     <string name="system_default">Системный по умолчанию</string>

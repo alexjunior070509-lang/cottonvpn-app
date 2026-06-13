@@ -2,6 +2,12 @@
 <resources>
     <!-- App -->
     <string name="app_name" translatable="false">CottonVPN</string>
+    <string name="cotton_connect">Connect</string>
+    <string name="cotton_disconnect">Disconnect</string>
+    <string name="cotton_key_hint">Paste your key</string>
+    <string name="cotton_save_key">Save key</string>
+    <string name="cotton_key_saved">Key saved</string>
+    <string name="cotton_change_key">Change</string>
     <string name="app_version_title">App version</string>
     <string name="language">Language</string>
     <string name="system_default">System default</string>
